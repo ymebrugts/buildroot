@@ -1,0 +1,19 @@
+# rules for Integrated Biometrics LLC. USB Scanner
+
+# avoid mapping endpoints as symbolic files
+KERNEL=="*_ep*",SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1004", NAME="%k", OPTIONS+="last_rule"
+KERNEL=="*_ep*",SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1005", NAME="%k", OPTIONS+="last_rule"
+KERNEL=="*_ep*",SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1006", NAME="%k", OPTIONS+="last_rule"
+KERNEL=="*_ep*",SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1010", NAME="%k", OPTIONS+="last_rule"
+KERNEL=="*_ep*",SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1020", NAME="%k", OPTIONS+="last_rule"
+KERNEL=="*_ep*",SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1100", NAME="%k", OPTIONS+="last_rule"
+KERNEL=="*_ep*",SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1200", NAME="%k", OPTIONS+="last_rule"
+
+# map the main device only as "IBScan", with full rw permissions
+SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1004", SYMLINK+="IBScan", MODE="0666"
+SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1005", SYMLINK+="IBScan", MODE="0666"
+SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1006", SYMLINK+="IBScan", MODE="0666"
+SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1010", SYMLINK+="IBScan", MODE="0666"
+SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1020", SYMLINK+="IBScan", MODE="0666"
+SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1100", SYMLINK+="IBScan", MODE="0666"
+SYSFS{idVendor}=="113f", SYSFS{idProduct}=="1200", SYMLINK+="IBScan", MODE="0666"

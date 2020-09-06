@@ -1,0 +1,73 @@
+#!/bin/bash
+d=$(dirname $0)
+if [ $d = "." ]; then d=$(pwd); fi
+
+# copy libIBScanUltimate.so and libIBScanUltimateJNI.so
+file=$d/libIBScanUltimate.so
+dest=/usr/lib
+if cp -f $file $dest ; then
+  echo "Copied $file to $dest"
+else
+  echo "Could not copy $file to $dest - check your permissions"
+  exit
+fi
+
+file=$d/libIBScanUltimateJNI.so
+dest=/usr/lib
+if cp -f $file $dest ; then
+  echo "Copied $file to $dest"
+else
+  echo "Could not copy $file to $dest - check your permissions"
+  exit
+fi
+
+#Check that we're really running a 2.6 kernel or higher
+if [ "`uname -r | cut -f 1,2 -d .`" \< "2.6" ]; then
+  echo "A minimum kernel level of 2.6.x is required.  Aborting."
+  exit
+fi
+
+# copy the IBScan rules file for udev
+file=$d/IBScan.rules
+dest=/etc/udev/rules.d
+if cp -f $file $dest ; then
+  echo "Copied $file to $dest"
+else
+  echo "Could not copy $file to $dest - check your permissions"
+  exit
+fi
+
+for d in $(echo $PATH | sed -e 's/:/ /g'); do
+  if [ -x $d/udevtrigger ]; then
+    echo "Running udevtrigger"
+    udevtrigger || echo "Could not run udevtrigger"
+  fi
+done
+
+echo "Waiting"
+db=/dev/IBScan
+for ((i=1; i<=20; i++)); do
+  printf "."
+  sleep 1
+  if [ -c $db ]; then
+    printf "\n"
+    echo "Device $db exists - successful"
+    exit 0
+  fi
+  
+  if [ -n "`cat /proc/bus/usb/devices | grep "Vendor=113f"`" ]; then
+    printf "\n"
+    echo "Device /proc/bus/usb/devices exists - successful"
+    exit 0
+  fi
+
+  if [ -n "`cat /sys/kernel/debug/usb/devices | grep "Vendor=113f"`" ]; then
+    printf "\n"
+    echo "Device /sys/kernel/debug/usb/devices exists - successful"
+    exit 0
+  fi
+done
+
+printf "\n"
+echo "Device $db not found - please try disconnecting and reconnecting"
+

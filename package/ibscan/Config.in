@@ -1,0 +1,18 @@
+config BR2_PACKAGE_IBSCAN
+	bool "ibscan"
+	depends on BR2_PACKAGE_HAS_UDEV
+	depends on BR2_ARM_CPU_ARMV7A
+	select BR2_PACKAGE_LIBUSB
+	select BR2_PACKAGE_LIBUSB_COMPAT
+	help
+	  Add IBScanUltimate lib with the example IBScan tool.
+
+if BR2_PACKAGE_IBSCAN
+
+config BR2_TARGET_IBSCAN_LOCATION
+	string "tarball location"
+	help
+	  Location of the IB Scan Ultimate file archive.
+	  IBScanUltimate_armv7a_*.tgz
+
+endif
