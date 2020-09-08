@@ -148,7 +148,7 @@ static void sendResponse(string message)
     m_messageNumber++;
     ofstream myfile;
     myfile.open("message" + to_string(m_messageNumber) + ".txt");
-    myfile << message;
+    myfile << message ;
     myfile.close();
 }
 
