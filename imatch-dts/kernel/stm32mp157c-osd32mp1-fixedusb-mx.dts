@@ -22,7 +22,7 @@
 /* USER CODE END includes */
 
 / {
-	model = "STMicroelectronics STM32MP157C-DK2 STM32CubeMX board";
+	model = "IMATCH 45";
 	compatible = "st,stm32mp157c-osd32mp1-fixedusb-mx", "st,stm32mp157";
 
 	memory@c0000000 {
@@ -700,6 +700,11 @@
 			compatible = "st,stpmic1-wdt";
 			status = "disabled";
 		};
+	};
+	eeprom@50 {
+		compatible = "atmel,24c02";
+		reg = <0x50>;
+		pagesize = <16>;
 	};
 	/* USER CODE END i2c4 */
 };
