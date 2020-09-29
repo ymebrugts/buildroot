@@ -133,6 +133,12 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+	wifi_pwrseq:wifi-pwrseq{
+		compatible = "mmc-pwrseq-simple";
+		reset-gpios = <&gpioh 4 GPIO_ACTIVE_LOW>;
+	};
+	/* USER CODE END root */
+
 	clocks {
 
 		/* USER CODE BEGIN clocks */
@@ -215,7 +221,7 @@
 			pinmux = <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
 			bias-disable;
 			drive-push-pull;
-			slew-rate = <2>;
+			slew-rate = <3>;
 		};
 	};
 
@@ -273,16 +279,16 @@
 					 <STM32_PINMUX('C', 6, AF10)>, /* SDMMC2_D6 */
 					 <STM32_PINMUX('C', 7, AF10)>, /* SDMMC2_D7 */
 					 <STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
-			bias-pull-up;
+			bias-disable;
 			drive-push-pull;
-			slew-rate = <2>;
+			slew-rate = <1>;
 		};
 		pins2 {
 			u-boot,dm-pre-reloc;
 			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
-			bias-pull-up;
+			bias-disable;
 			drive-push-pull;
-			slew-rate = <2>;
+			slew-rate = <3>;
 		};
 	};
 
@@ -298,23 +304,23 @@
 					 <STM32_PINMUX('B', 15, AF9)>, /* SDMMC2_D1 */
 					 <STM32_PINMUX('C', 6, AF10)>, /* SDMMC2_D6 */
 					 <STM32_PINMUX('C', 7, AF10)>; /* SDMMC2_D7 */
-			bias-pull-up;
+			bias-disable;
 			drive-push-pull;
-			slew-rate = <2>;
+			slew-rate = <1>;
 		};
 		pins2 {
 			u-boot,dm-pre-reloc;
 			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
-			bias-pull-up;
+			bias-disable;
 			drive-push-pull;
-			slew-rate = <2>;
+			slew-rate = <3>;
 		};
 		pins3 {
 			u-boot,dm-pre-reloc;
 			pinmux = <STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
-			bias-pull-up;
+			bias-disable;
 			drive-open-drain;
-			slew-rate = <2>;
+			slew-rate = <1>;
 		};
 	};
 
@@ -340,7 +346,7 @@
 		pins1 {
 			u-boot,dm-pre-reloc;
 			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-			bias-pull-up;
+			bias-disable;
 		};
 		pins2 {
 			u-boot,dm-pre-reloc;
@@ -782,6 +788,7 @@
 	pinctrl-1 = <&sdmmc1_opendrain_pins_mx>;
 	pinctrl-2 = <&sdmmc1_sleep_pins_mx>;
 	status = "okay";
+
 	/* USER CODE BEGIN sdmmc1 */
 	cd-gpios = <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 	disable-wp;
@@ -800,19 +807,20 @@
 	status = "okay";
 
 	/* USER CODE BEGIN sdmmc2 */
+	arm,primecell-periphid = <0x10153180>;
 	non-removable;
-	no-sd;
-	no-sdio;
 	st,neg-edge;
-	bus-width = <1>;
+	bus-width = <4>;
 	vmmc-supply = <&v3v3>;
-	vqmmc-supply = <&v3v3>;
-	mmc-ddr-3_3v;
-	/* USER CODE END sdmmc2 */
-};
+	mmc-pwrseq = <&wifi_pwrseq>;
+	#address-cells = <1>;
+	#size-cells = <0>;
 
-&sdmmc3 {
-	status = "disabled";
+	brcmf:bcrmf@1{
+		reg = <1>;
+		compatible = "brcm,bcm4329-fmac";
+	};
+	/* USER CODE END sdmmc2 */
 };
 
 &tamp{
